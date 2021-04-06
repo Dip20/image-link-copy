@@ -40,8 +40,9 @@
             $sql = mysqli_query($conn,"INSERT INTO tbl_upload (filename,file_size,file_path) VALUES('$file_name','$file_size','$dest')");
             if ($sql)
             {
+              $image_link_redirect = base64_encode($dest);
               // echo "1";
-              redirect("../index?status=1");
+              redirect("../index?status=1&image-link=$image_link_redirect");
 
             }
             else

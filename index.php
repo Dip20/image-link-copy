@@ -1,3 +1,17 @@
+<?php
+if (isset($_GET['image-link']))
+{
+  $link_copy = base64_decode($_GET['image-link']);
+  $validator = "";
+
+}else
+{
+    $link_copy = "Try to upload image";
+    $validator = "disabled";
+}
+
+
+ ?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -74,9 +88,13 @@
               <input type="hidded" name="date" value="<?php echo date("dmY h:i:s a"); ?>">
               <input type="file" class="custom-file-input" id="customFile" onchange="loadFile(event)" name="file">
               <label class="custom-file-label" for="customFile">Choose file</label>
-              <label class="d-none" id="uploading-status-lable">Uploading.....</label>
-              <div class="progress d-none" id="uploading-status-bar">
-                <div  class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+          </div>
+          <br>
+          <br>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="image-link" readonly value="<?php echo   $link_copy; ?>">
+            <div class="input-group-append">
+              <button class="btn btn-secondary" type="button" id="button-addon2" onclick="copyToClipboard()" <?php echo $validator; ?>>Copy image link</button>
             </div>
           </div>
         </div>
@@ -92,7 +110,7 @@
       </div>
     </footer>
     <!-- footer ends here -->
-    <!-- script -->
+
     <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
     <script src="jquery.js"></script>
     <script>
@@ -105,134 +123,17 @@
 
         };
 
-
-
-
-
-
-
-          // $("#upload-btn").click(function(e){
-          //   e.preventDefault();
-          //
-          //   $("#frmupload").on("submit",function(event){
-          //
-          //      var formData = new FormData(this);
-          //
-          //
-          //   });
-          //
-          //      $.ajax({
-          //        url:"php/uploader.php",
-          //        type:"POST",
-          //        data:formData,
-          //
-          //        success:function(res)
-          //        {
-          //          alert(res);
-          //          // if (res=="0")
-          //          // {
-          //          //   swal("Faild to upload Image! ", "Maximum upload size is 2.5MB" ,"error");
-          //          // }else if (res=="1")
-          //          // {
-          //          //   swal("Successfully uploaded. ", "" ,"success");
-          //          //
-          //          // }else if (res=="2")
-          //          // {
-          //          //   swal("Faild to upload Image! ", "Server Not Responding" ,"error");
-          //          //
-          //          // }else if (res=="3")
-          //          // {
-          //          //   swal("Only JPG,JPEG,PNG file are allowed for upload! ", "" ,"error");
-          //          // }
-          //
-          //        },
-          //        error: function (error)
-          //        {
-          //          alert("error");
-          //        }
-          //      });
-          //
-          //
-          //
-          // });
-          //
-          //
-          //
-          //
-          //
-
-
-
-
-
-
-
-
-        // upload function
-      // function a()
-      //   {
-          // $('#upload-btn').on('click',function(e)
-          //   {
-          //    e.preventDefault();
-          //
-          //    var formData = new FormData(this);
-
-             // submit data using ajax.
-             // $.ajax({
-             //   url:"php/uploader.php",
-             //   type:"POST",
-             //   data:formData,
-             //   // dataType: "json",
-             //
-             //   beforeSend: function()
-             //   {
-             //    // before send..
-             //      $("#upload-btn").html("Please Wait");
-             //      $("#uploading-status-lable").removeClass("d-none");
-             //      $("#uploading-status-bar").removeClass("d-none");
-             //
-             //    },
-             //
-             //   success:function (res)
-             //   {
-             //
-             //     // setTimeout(function()
-             //     //   {
-             //         $("#uploading-status-lable").addClass("d-none");
-             //         $("#uploading-status-bar").addClass("d-none");
-             //         $("#upload-btn").html("Uploaded");
-             //         // $("#contex").load("index.php #contex");
-             //
-             //         if (res=="0")
-             //         {
-             //           swal("Faild to upload Image! ", "Maximum upload size is 2.5MB" ,"error");
-             //         }else if (res=="1")
-             //         {
-             //           swal("Successfully uploaded. ", "" ,"success");
-             //
-             //         }else if (res=="2")
-             //         {
-             //           swal("Faild to upload Image! ", "Server Not Responding" ,"error");
-             //
-             //         }else if (res=="3")
-             //         {
-             //           swal("Only JPG,JPEG,PNG file are allowed for upload! ", "" ,"error");
-             //         }
-             //
-             //       // },1000);
-             //
-             //   }
-             //
-             //
-             // });
-          // });
-
-        // }
+        function copyToClipboard()
+        {
+          var $temp = $("<input>");
+          $("body").append($temp);
+          $temp.val($("#image-link").val()).select();
+          document.execCommand("copy");
+          $temp.remove();
+        swal("Copied" , "Paste it anyware","success");
+        }
 
     </script>
-
-
-
 
     <?php
 
@@ -245,8 +146,9 @@
           	setTimeout(myFunction, 1600); function myFunction(){window.location.href ="'.$_SERVER['PHP_SELF'].'";}</script>';
        }elseif ($status=="1")
        {
+         $li = $_GET['image-link'];
           echo '<script> swal("Successfully uploaded. ", "" ,"success");
-          	setTimeout(myFunction, 1600); function myFunction(){window.location.href ="'.$_SERVER['PHP_SELF'].'";}</script>';
+          	setTimeout(myFunction, 1600); function myFunction(){window.location.href ="'.$_SERVER['PHP_SELF']."?image-link=$li".'";}</script>';
 
        }elseif ($status=="2")
        {
@@ -261,9 +163,6 @@
     }
 
  ?>
-
-
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
   </body>
